@@ -1,16 +1,16 @@
 /* Gestione dello slider */
 
 // seleziono tutti gli slider
-var sliders = document.querySelectorAll(".slider-anteprime"); //nodelist contenente i 4 div.slider-anteprime
+const sliders = document.querySelectorAll(".slider-anteprime"); //nodelist contenente i 4 div.slider-anteprime
 
 for (var i = 0; i < sliders.length; i++) {
   (function (slider) {
     //slider è il parametro della funzione, rappresenta il singolo elemento della variabile sliders
     //pertanto le seguenti varibili sono variabili locali che selezionano gli elementi dentro ad ogni singolo slider
-    //questo serve affinchè al click di un bottone la gestione dello slide sia circoscritto allo slider associato al bottone e non a tutti gli slider
-    var track = slider.querySelector(".slider-track"); //contiene tutti i box anteprima
-    var left_button = slider.querySelector(".slider-button.left"); //sono i bottoni per gestire lo slide
-    var right_button = slider.querySelector(".slider-button.right");
+    //questo serve affinchè al click di un bottone la gestione dello slide sia circoscritta allo slider associato al bottone e non a tutti gli slider
+    const track = slider.querySelector(".slider-track"); //contiene tutti i box anteprima
+    const left_button = slider.querySelector(".slider-button.left"); //sono i bottoni per gestire lo slide
+    const right_button = slider.querySelector(".slider-button.right");
 
     function aggiornaItemWidth(slider) {
       //questa funzione serve in quanto successivamente alcuni box vengono nascosti e poi fatti apparire di nuovo. inoltre ho intenzione di utilizzare delle mediaquery per adattare la pagina a laptop. in questo modo ogni volta che viene eseguita la funzione, restituisce la larghezza corretta del box anteprima
@@ -20,7 +20,7 @@ for (var i = 0; i < sliders.length; i++) {
 
     // Funzione per muovere a destra
     function destra() {
-      var itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
+      let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
       track.style.transition = "transform 0.5s ease"; //permette la transizione fluida ad ogni click (senza questo funzionerebbe per il primo click soltanto)
       track.style.transform = "translateX(-" + itemWidth + "px)"; //il contenitore delle anteprime si muove a sinistra proprio della dimensione del box + margin, espresso in px
 
@@ -30,7 +30,7 @@ for (var i = 0; i < sliders.length; i++) {
         track.style.transition = "none";
         track.style.transform = "translateX(0)"; //queste due righe servono a riportare la posizione dello slider in posizione originale una volta finita la transizione. questo ci serve perchè immediatamente dopo facciamo cut-copy del box anteprima che abbiamo appena nascosto clickando il bottone. se non avessimo queste 2 righe di codice ci sarebbe un piccolo disastro nelle righe successive
 
-        var primo_box = track.firstElementChild;
+        let primo_box = track.firstElementChild;
         track.appendChild(primo_box);
 
         //hat-trick per rendere lo slider ciclico. invece di impazzire su come far riapparire la prima anteprima dopo la decima o avere come effetto visivo lo slider che ricomincia da capo, manipolo il DOM spostando l'anteprima appena nascosta in fondo allo slide :)))
@@ -43,9 +43,9 @@ for (var i = 0; i < sliders.length; i++) {
     function sinistra() {
       //l'approccio qui è quello di manipolare il DOM come prima cosa, e far partire la transizione solo successivamente, ossia portare l'ultimo box in prima posizione (nascosto a sinistra dello schermo visibile) e poi far partire la transizione.
 
-      var itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
+      let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
 
-      var ultimo_box = track.lastElementChild;
+      let ultimo_box = track.lastElementChild;
       track.insertBefore(ultimo_box, track.firstElementChild);
 
       track.style.transition = "none";
@@ -169,15 +169,15 @@ document.getElementById("home").addEventListener("click", function () {
 
 function selezione_video_casuale() {
   // Cerca solo slider dentro ad articoli visibili (senza .hidden)
-  var sliders = document.querySelectorAll(
+  let sliders = document.querySelectorAll(
     "article:not(.hidden) .slider-anteprime"
   );
 
-  var randomSlider = sliders[Math.floor(Math.random() * sliders.length)];
-  var videos = randomSlider.querySelectorAll(".video-anteprima");
+  let randomSlider = sliders[Math.floor(Math.random() * sliders.length)];
+  let videos = randomSlider.querySelectorAll(".video-anteprima");
 
-  var randomVideo = videos[Math.floor(Math.random() * videos.length)];
-  var box = randomVideo.closest(".box-anteprima");
+  let randomVideo = videos[Math.floor(Math.random() * videos.length)];
+  let box = randomVideo.closest(".box-anteprima");
   //la funzione restituisce un oggetto con le proprietà src, titolo e descrizione del video selezionato casualmente. successivamente queste proprietà verranno usate per essere iniettate nell'anteprima hero
   return {
     src: randomVideo.getAttribute("src"),
@@ -187,8 +187,8 @@ function selezione_video_casuale() {
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-  var heroVideo = document.querySelector("#hero video.vetrina");
-  var heroContent = document.querySelector("#hero .content");
+  const heroVideo = document.querySelector("#hero video.vetrina");
+  const heroContent = document.querySelector("#hero .content");
 
   function cambiaVideo() {
     heroVideo.style.transition = "opacity 0.3s ease";
@@ -197,7 +197,7 @@ document.addEventListener("DOMContentLoaded", function () {
     heroContent.style.opacity = 0;
 
     setTimeout(function () {
-      var randomVideo = selezione_video_casuale();
+      let randomVideo = selezione_video_casuale();
 
       heroVideo.setAttribute("src", randomVideo.src);
       heroVideo.load();
@@ -222,9 +222,9 @@ document.addEventListener("DOMContentLoaded", function () {
   non conoscevo questa funzione e l'ho trovata su w3 al link https://www.w3schools.com/jsref/jsref_event.asp mentre cercavo un modo per far sì che ogni volta che un article venisse nascosto o mostrato (ossia al click sui bottoni della navbar) venisse aggiornato il video nell'hero.
   purtroppo w3 non spiega bene questa funzione, per cui ho fatto delle ricerche e ho provato a studiarla su https://it.javascript.info/mutation-observer
   ammetto che su questa funzione mi sono fatto aiutare da chatgpt perchè non sapevo come gestirne la sintassi */
-  var observer = new MutationObserver(function (mutations) {
-    for (var i = 0; i < mutations.length; i++) {
-      var mutation = mutations[i];
+  let observer = new MutationObserver(function (mutations) {
+    for (let i = 0; i < mutations.length; i++) {
+      let mutation = mutations[i];
       if (
         mutation.type === "attributes" &&
         mutation.attributeName === "class"
@@ -235,8 +235,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // Attiva observer su tutti gli article
-  var articles = document.querySelectorAll("article");
-  for (var j = 0; j < articles.length; j++) {
+  let articles = document.querySelectorAll("article");
+  for (let j = 0; j < articles.length; j++) {
     observer.observe(articles[j], { attributes: true });
   }
 });
@@ -246,13 +246,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 document.addEventListener("DOMContentLoaded", function () {
   //dichiarazione variabili
-  var loginForm = document.querySelector(".login-popup form");
+  const loginForm = document.querySelector(".login-popup form");
 
-  var hiddenButtons = document.querySelectorAll(".bottone.hidden");
+  const hiddenButtons = document.querySelectorAll(".bottone.hidden");
 
-  var avatar = document.getElementById("avatar");
-  var avatarMenu = document.getElementById("avatar-menu");
-  var avatarImg = document.querySelector("#avatar img");
+  const avatar = document.getElementById("avatar");
+  const avatarMenu = document.getElementById("avatar-menu");
+  const avatarImg = document.querySelector("#avatar img");
 
   const accediLabel = document.getElementById("btnAccedi");
 
@@ -292,8 +292,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // nascondiamo i bottoni che simulano le sezioni associate al profilo
     ["film", "serie", "bambini"].forEach(function (id) {
-      var btn = document.getElementById(id);
-      if (btn) btn.classList.add("hidden");
+      let btn = document.getElementById(id);
+      btn.classList.add("hidden");
     });
 
     //le prossime righe servono a resettare il form del login
@@ -330,9 +330,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // togli hidden solo all'article #cartoni in modo che appaia solo quello
     const targetArticle = document.querySelector("article#cartoni");
-    if (targetArticle) {
-      targetArticle.classList.remove("hidden");
-    }
+    targetArticle.classList.remove("hidden");
   });
 });
 

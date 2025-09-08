@@ -3,71 +3,69 @@
 // seleziono tutti gli slider
 const sliders = document.querySelectorAll(".slider-anteprime"); //nodelist contenente i 4 div.slider-anteprime
 
-for (var i = 0; i < sliders.length; i++) {
-  (function (slider) {
-    //slider è il parametro della funzione, rappresenta il singolo elemento della variabile sliders
-    //pertanto le seguenti varibili sono variabili locali che selezionano gli elementi dentro ad ogni singolo slider
-    //questo serve affinchè al click di un bottone la gestione dello slide sia circoscritta allo slider associato al bottone e non a tutti gli slider
-    const track = slider.querySelector(".slider-track"); //contiene tutti i box anteprima
-    const left_button = slider.querySelector(".slider-button.left"); //sono i bottoni per gestire lo slide
-    const right_button = slider.querySelector(".slider-button.right");
+sliders.forEach(function (slider) {
+  //slider è il parametro della funzione, rappresenta il singolo elemento della variabile sliders
+  //pertanto le seguenti varibili sono variabili locali che selezionano gli elementi dentro ad ogni singolo slider
+  //questo serve affinchè al click di un bottone la gestione dello slide sia circoscritta allo slider associato al bottone e non a tutti gli slider
+  const track = slider.querySelector(".slider-track"); //contiene tutti i box anteprima
+  const left_button = slider.querySelector(".slider-button.left"); //sono i bottoni per gestire lo slide
+  const right_button = slider.querySelector(".slider-button.right");
 
-    function aggiornaItemWidth(slider) {
-      //questa funzione serve in quanto successivamente alcuni box vengono nascosti e poi fatti apparire di nuovo. inoltre ho intenzione di utilizzare delle mediaquery per adattare la pagina a laptop. in questo modo ogni volta che viene eseguita la funzione, restituisce la larghezza corretta del box anteprima
-      const item = slider.querySelector(".box-anteprima");
-      return item.offsetWidth + 20; // larghezza box + margine (10+10)
-    }
+  function aggiornaItemWidth(slider) {
+    //questa funzione serve in quanto successivamente alcuni box vengono nascosti e poi fatti apparire di nuovo. inoltre ho intenzione di utilizzare delle mediaquery per adattare la pagina a laptop. in questo modo ogni volta che viene eseguita la funzione, restituisce la larghezza corretta del box anteprima
+    const item = slider.querySelector(".box-anteprima");
+    return item.offsetWidth + 20; // larghezza box + margine (10+10)
+  }
 
-    // Funzione per muovere a destra
-    function destra() {
-      let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
-      track.style.transition = "transform 0.5s ease"; //permette la transizione fluida ad ogni click (senza questo funzionerebbe per il primo click soltanto)
-      track.style.transform = "translateX(-" + itemWidth + "px)"; //il contenitore delle anteprime si muove a sinistra proprio della dimensione del box + margin, espresso in px
+  // Funzione per muovere a destra
+  function destra() {
+    let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
+    track.style.transition = "transform 0.5s ease"; //permette la transizione fluida ad ogni click (senza questo funzionerebbe per il primo click soltanto)
+    track.style.transform = "translateX(-" + itemWidth + "px)"; //il contenitore delle anteprime si muove a sinistra proprio della dimensione del box + margin, espresso in px
 
-      track.addEventListener("transitionend", function interrompi() {
-        //questo evento è "la fine della transizione" (sia santificato w3school per questo)
-
-        track.style.transition = "none";
-        track.style.transform = "translateX(0)"; //queste due righe servono a riportare la posizione dello slider in posizione originale una volta finita la transizione. questo ci serve perchè immediatamente dopo facciamo cut-copy del box anteprima che abbiamo appena nascosto clickando il bottone. se non avessimo queste 2 righe di codice ci sarebbe un piccolo disastro nelle righe successive
-
-        let primo_box = track.firstElementChild;
-        track.appendChild(primo_box);
-
-        //hat-trick per rendere lo slider ciclico. invece di impazzire su come far riapparire la prima anteprima dopo la decima o avere come effetto visivo lo slider che ricomincia da capo, manipolo il DOM spostando l'anteprima appena nascosta in fondo allo slide :)))
-
-        track.removeEventListener("transitionend", interrompi); //per evitare che l'evento di transizione si attivi più volte
-      });
-    }
-
-    // Funzione per muovere a sinistra (per questo ho dovuto cambiare approccio rispetto alla funzione destra perchè se avessi fatto la stessa cosa l'effetto grafico sarebbe stato pessimo)
-    function sinistra() {
-      //l'approccio qui è quello di manipolare il DOM come prima cosa, e far partire la transizione solo successivamente, ossia portare l'ultimo box in prima posizione (nascosto a sinistra dello schermo visibile) e poi far partire la transizione.
-
-      let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
-
-      let ultimo_box = track.lastElementChild;
-      track.insertBefore(ultimo_box, track.firstElementChild);
+    track.addEventListener("transitionend", function interrompi() {
+      //questo evento è "la fine della transizione" (sia santificato w3school per questo)
 
       track.style.transition = "none";
-      track.style.transform = "translateX(-" + itemWidth + "px)";
+      track.style.transform = "translateX(0)"; //queste due righe servono a riportare la posizione dello slider in posizione originale una volta finita la transizione. questo ci serve perchè immediatamente dopo facciamo cut-copy del box anteprima che abbiamo appena nascosto clickando il bottone. se non avessimo queste 2 righe di codice ci sarebbe un piccolo disastro nelle righe successive
 
-      // il timeout di 20ms serve ad "assestare" la pagina ossia permettere al browser di calcolare il cambio del DOM e successivamente riportare lo slider a posizione X(0). questo crea un illusione di transizione
+      let primo_box = track.firstElementChild;
+      track.appendChild(primo_box);
 
-      setTimeout(function () {
-        track.style.transition = "transform 0.5s ease";
-        track.style.transform = "translateX(0)";
-      }, 20);
+      //hat-trick per rendere lo slider ciclico. invece di impazzire su come far riapparire la prima anteprima dopo la decima o avere come effetto visivo lo slider che ricomincia da capo, manipolo il DOM spostando l'anteprima appena nascosta in fondo allo slide :)))
 
-      track.addEventListener("transitionend", function interrompi() {
-        track.removeEventListener("transitionend", interrompi);
-      });
-    }
+      track.removeEventListener("transitionend", interrompi); //per evitare che l'evento di transizione si attivi più volte
+    });
+  }
 
-    //gli event listener sui bottoni
-    right_button.addEventListener("click", destra);
-    left_button.addEventListener("click", sinistra);
-  })(sliders[i]); //qui invoco la funzione appena descritta passandogli come parametro lo slider corrente
-}
+  // Funzione per muovere a sinistra (per questo ho dovuto cambiare approccio rispetto alla funzione destra perchè se avessi fatto la stessa cosa l'effetto grafico sarebbe stato pessimo)
+  function sinistra() {
+    //l'approccio qui è quello di manipolare il DOM come prima cosa, e far partire la transizione solo successivamente, ossia portare l'ultimo box in prima posizione (nascosto a sinistra dello schermo visibile) e poi far partire la transizione.
+
+    let itemWidth = aggiornaItemWidth(slider); // ricalcolo ogni volta
+
+    let ultimo_box = track.lastElementChild;
+    track.insertBefore(ultimo_box, track.firstElementChild);
+
+    track.style.transition = "none";
+    track.style.transform = "translateX(-" + itemWidth + "px)";
+
+    // ho notato che con lo slider verso sinistra, il movimento era "scattoso". ho inserito il timeout di 20ms per permettere al browser di "assestarsi" al cambio del DOM e successivamente riportare lo slider a posizione X(0). questo crea un illusione di transizione. senza questo timeout lo slider si muoveva in modo non fluido
+
+    setTimeout(function () {
+      track.style.transition = "transform 0.5s ease";
+      track.style.transform = "translateX(0)";
+    }, 20);
+
+    track.addEventListener("transitionend", function interrompi() {
+      track.removeEventListener("transitionend", interrompi);
+    });
+  }
+
+  //gli event listener sui bottoni
+  right_button.addEventListener("click", destra);
+  left_button.addEventListener("click", sinistra);
+});
 
 /* Gestione dello slider */
 
@@ -203,7 +201,7 @@ document.addEventListener("DOMContentLoaded", function () {
       heroVideo.load();
       heroVideo.play();
 
-      heroContent.querySelector("h1").textContent = randomVideo.titolo;
+      heroContent.querySelector("h2").textContent = randomVideo.titolo;
       heroContent.querySelector("p").textContent = randomVideo.descrizione;
 
       heroVideo.style.opacity = 1;

@@ -50,10 +50,11 @@
 
       <!-- popup per effettuare login/registrazione -->
       <div class="popup login-popup">
-        <form class="popup-content">
+        <form id="loginForm" class="popup-content">
           <div class="contenitore-img">
             <img src="LabTV-Loghi/4.png" alt="" />
           </div>
+
           <div class="box-inserimento">
             <label for="username"><b>Username</b></label>
             <input
@@ -63,14 +64,17 @@
               class="username"
               required
             />
+            <span class="msg-errore"></span>
 
             <label for="password"><b>Password</b></label>
             <input
               type="password"
               placeholder="Enter Password"
+              id="password"
               class="password"
               required
             />
+            <span class="msg-errore"></span>
 
             <button type="submit">Login</button>
             <label>
@@ -80,7 +84,6 @@
           </div>
 
           <div class="box-inserimento">
-            <!-- Bottone Registrati per sostituire il popup di login-->
             <label
               for="switch-registrazione"
               class="registra-button"
@@ -96,7 +99,7 @@
 
       <!-- popup registrazione, che sostituisce quello di login -->
       <div class="popup registrazione-popup">
-        <form class="popup-content">
+        <form id="registerForm" class="popup-content">
           <div class="contenitore-img">
             <img src="LabTV-Loghi/4.png" alt="" />
           </div>
@@ -109,6 +112,7 @@
               class="username"
               required
             />
+            <span class="msg-errore"></span>
 
             <label for="new-email"><b>Email</b></label>
             <input
@@ -118,6 +122,7 @@
               class="email"
               required
             />
+            <span class="msg-errore"></span>
 
             <label for="new-password"><b>Password</b></label>
             <input
@@ -127,6 +132,7 @@
               class="password"
               required
             />
+            <span class="msg-errore"></span>
 
             <button type="submit">Registrati</button>
           </div>
@@ -157,6 +163,7 @@
           <h2 id="popup-title">Titolo</h2>
           <video id="popup-video" controls autoplay muted loop></video>
           <p id="popup-sinossi">Sinossi</p>
+          <div id="popup-episodi" class="hidden"></div>
           <button id="popup-guarda">GUARDA ORA</button>
         </div>
       </div>
@@ -329,6 +336,30 @@
                     Un corridoio luminoso blu e rosa
                   </p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep1.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep2.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 3" />
+                    <span>Episodio 3</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep4.jpg" alt="Episodio 4" />
+                    <span>Episodio 4</span>
+                  </div>
+
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep5.jpg" alt="Episodio 5" />
+                    <span>Episodio 5</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -340,6 +371,17 @@
                 <div class="descrizione-anteprima">
                   <p class="titolo-descrizione">Il nome della Rosa</p>
                   <p class="testo-descrizione">Una magnifica rosa sboccia</p>
+                </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep1.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep2.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
                 </div>
               </div>
               <div class="box-anteprima">
@@ -355,6 +397,17 @@
                     Onde sonore si propagano nel latte
                   </p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep4.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -369,6 +422,17 @@
                     Come mi sento a svolgere questa prova
                   </p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep5.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -380,6 +444,17 @@
                 <div class="descrizione-anteprima">
                   <p class="titolo-descrizione">Ostia</p>
                   <p class="testo-descrizione">Una spiaggia caraibica</p>
+                </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep2.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
                 </div>
               </div>
               <div class="box-anteprima">
@@ -393,6 +468,17 @@
                   <p class="titolo-descrizione">La spirale del tempo</p>
                   <p class="testo-descrizione">Spirale bianca infinita</p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep5.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep1.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -404,6 +490,17 @@
                 <div class="descrizione-anteprima">
                   <p class="titolo-descrizione">Umbrella</p>
                   <p class="testo-descrizione">Fuori piove a dirotto</p>
+                </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep5.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
                 </div>
               </div>
               <div class="box-anteprima">
@@ -417,6 +514,17 @@
                   <p class="titolo-descrizione">LabFor Webb</p>
                   <p class="testo-descrizione">L'immensità dello spazio</p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep2.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep5.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -429,6 +537,17 @@
                   <p class="titolo-descrizione">Ostia al tramonto</p>
                   <p class="testo-descrizione">Vista dal pontile di Ostia</p>
                 </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep4.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep1.jpg" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
+                </div>
               </div>
               <div class="box-anteprima">
                 <video
@@ -440,6 +559,17 @@
                 <div class="descrizione-anteprima">
                   <p class="titolo-descrizione">Algoritmi e grafici</p>
                   <p class="testo-descrizione">Meglio non approfondire</p>
+                </div>
+                <!-- elenco episodi (nascosto) -->
+                <div class="lista-episodi hidden">
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/Episodi/ep3.jpg" alt="Episodio 1" />
+                    <span>Episodio 1</span>
+                  </div>
+                  <div class="episodio">
+                    <img src="LabTV-Loghi/1.png" alt="Episodio 2" />
+                    <span>Episodio 2</span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -485,7 +615,7 @@
                 <div class="descrizione-anteprima">
                   <p class="titolo-descrizione">Onde</p>
                   <p class="testo-descrizione">
-                    Onde del mare che si infrangono sugli scogli
+                    Onde del mare che si infrangono
                   </p>
                 </div>
               </div>
@@ -702,7 +832,7 @@
 
       <!-- Popup Contatti -->
       <div class="popup">
-        <form action="#" method="post" class="popup-content">
+        <form id="contactForm" action="#" method="post" class="popup-content">
           <h2>Contattaci</h2>
 
           <div class="box-inserimento">
@@ -714,6 +844,7 @@
               placeholder="Inserisci il tuo nome"
               required
             />
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">
@@ -725,6 +856,7 @@
               placeholder="Inserisci il tuo cognome"
               required
             />
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">
@@ -736,6 +868,7 @@
               placeholder="Inserisci la tua email"
               required
             />
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">
@@ -746,6 +879,7 @@
               name="telefono"
               placeholder="Inserisci il tuo numero di telefono"
             />
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">
@@ -757,13 +891,15 @@
               placeholder="Scrivi qui il tuo messaggio..."
               required
             ></textarea>
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">
             <label>
-              <input type="checkbox" name="privacy" required />
+              <input type="checkbox" id="privacy" name="privacy" required />
               Accetto l'informativa sulla privacy
             </label>
+            <span class="msg-errore"></span>
           </div>
 
           <div class="box-inserimento">

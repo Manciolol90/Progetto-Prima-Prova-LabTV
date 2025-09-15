@@ -77,8 +77,9 @@ const popupSinossi = document.getElementById("popup-sinossi");
 const popupVideo = document.getElementById("popup-video");
 const popupClose = document.querySelector(".close-popup");
 const popupGuarda = document.getElementById("popup-guarda");
+const popupEpisodi = document.getElementById("popup-episodi");
 
-function apriPopup(titolo, sinossi, videoSrc) {
+function apriPopup(titolo, sinossi, videoSrc, episodiHtml) {
   popupTitle.textContent = titolo;
   popupSinossi.textContent = sinossi;
   popupVideo.src = videoSrc;
@@ -86,6 +87,13 @@ function apriPopup(titolo, sinossi, videoSrc) {
   popupVideo.loop = false; // toglie il loop dal video
   popupVideo.play();
   popup.classList.add("active"); //reso visibile tramite css
+  if (episodiHtml.trim() !== "") {
+    popupEpisodi.innerHTML = episodiHtml;
+    popupEpisodi.classList.remove("hidden");
+  } else {
+    popupEpisodi.innerHTML = "";
+    popupEpisodi.classList.add("hidden");
+  }
 }
 
 // Quando il video termina, rimane sul primo fotogramma
@@ -118,11 +126,18 @@ anteprime.forEach(function (box) {
     const titolo = box.querySelector(".titolo-descrizione").textContent;
     const sinossi = box.querySelector(".testo-descrizione").textContent;
     const videoSrc = box.querySelector("video").src;
-    apriPopup(titolo, sinossi, videoSrc); //apre il popup con i dati dell'anteprima cliccata
+    const listaEpisodi = box.querySelector(".lista-episodi");
+    let episodiHtml;
+    if (listaEpisodi) {
+      episodiHtml = listaEpisodi.innerHTML;
+    } else {
+      episodiHtml = "";
+    }
+    apriPopup(titolo, sinossi, videoSrc, episodiHtml); //apre il popup con i dati dell'anteprima cliccata
   });
 });
 
-// Pulsante "GUARDA ORA" (personalizzabile)
+// Pulsante "GUARDA ORA"
 popupGuarda.addEventListener("click", function () {
   alert(
     "Da qui in poi si comunica col backend per aprire la pagina del film o far partire il video"
@@ -219,7 +234,7 @@ document.addEventListener("DOMContentLoaded", function () {
   /* NOTA BENE:
   non conoscevo questa funzione e l'ho trovata su w3 al link https://www.w3schools.com/jsref/jsref_event.asp mentre cercavo un modo per far sì che ogni volta che un article venisse nascosto o mostrato (ossia al click sui bottoni della navbar) venisse aggiornato il video nell'hero.
   purtroppo w3 non spiega bene questa funzione, per cui ho fatto delle ricerche e ho provato a studiarla su https://it.javascript.info/mutation-observer
-  ammetto che su questa funzione mi sono fatto aiutare da chatgpt perchè non sapevo come gestirne la sintassi */
+  su questa funzione mi sono fatto aiutare da chatgpt perchè non sapevo come gestirne la sintassi */
   let observer = new MutationObserver(function (mutations) {
     for (let i = 0; i < mutations.length; i++) {
       let mutation = mutations[i];
@@ -263,12 +278,52 @@ document.addEventListener("DOMContentLoaded", function () {
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault(); // evita refresh pagina
 
-    // Mostra bottoni
+    const username = document.getElementById("username");
+    const password = document.getElementById("password");
+
+    // definizione delle regex
+    const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
+
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
+
+    let errore = false;
+
+    // reset messaggi precedenti
+    document.querySelectorAll(".msg-errore").forEach(function (s) {
+      s.textContent = "";
+    });
+
+    // gestione username
+    if (!usernameRegex.test(username.value.trim())) {
+      //se il valore inserito (senza spazi alle estremità) NON è segue le regole regex si entra nell'if
+      username.classList.add("errore");
+      username.nextElementSibling.textContent =
+        "Username non valido (3-15 lettere/numeri)";
+      errore = true;
+    } else {
+      //altrimenti si entra nell'else
+      username.classList.remove("errore");
+    }
+
+    // password
+    if (!passwordRegex.test(password.value.trim())) {
+      password.classList.add("errore");
+      password.nextElementSibling.textContent =
+        "Password min 6 caratteri, con almeno 1 maiuscola e 1 numero";
+      errore = true;
+    } else {
+      password.classList.remove("errore");
+    }
+
+    // se i dati inseriti non seguono le regex la funzione si interrompe
+    if (errore) return;
+
+    // mostra bottoni nella navbar
     hiddenButtons.forEach(function (btn) {
       btn.classList.remove("hidden");
     });
 
-    // Facendo login mostriamo gli articoli "Per te" e "Continua a guardare" che simulano il fatto che l'utente ha una cronologia di visione
+    // Facendo login mostriamo gli slider "Per te" e "Continua a guardare" che simulano il fatto che l'utente ha una cronologia di visione
     document.getElementById("perte").classList.remove("hidden");
     document.getElementById("continua").classList.remove("hidden");
 
@@ -280,6 +335,64 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Mostra avatar
     avatarImg.classList.remove("hidden");
+  });
+
+  //gestione del bottone registrati
+
+  const registerForm = document.getElementById("registerForm");
+
+  registerForm.addEventListener("submit", function (e) {
+    e.preventDefault(); // evita refresh pagina
+
+    const newUsername = document.getElementById("new-username");
+    const newEmail = document.getElementById("new-email");
+    const newPassword = document.getElementById("new-password");
+
+    // definizione delle regex
+    const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
+    const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    const passwordRegex = /^(?=.*[A-Z])(?=.*[0-9]).{6,}$/;
+
+    let errore = false;
+
+    document
+      .querySelectorAll("#registerForm .msg-errore")
+      .forEach(function (s) {
+        s.textContent = "";
+      });
+
+    // username
+    if (!usernameRegex.test(newUsername.value.trim())) {
+      newUsername.classList.add("errore");
+      newUsername.nextElementSibling.textContent =
+        "Username non valido (3-15 lettere/numeri/underscore)";
+      errore = true;
+    } else {
+      newUsername.classList.remove("errore");
+    }
+
+    // email
+    if (!emailRegex.test(newEmail.value.trim())) {
+      newEmail.classList.add("errore");
+      newEmail.nextElementSibling.textContent = "Inserisci una email valida.";
+      errore = true;
+    } else {
+      newEmail.classList.remove("errore");
+    }
+
+    // password
+    if (!passwordRegex.test(newPassword.value.trim())) {
+      newPassword.classList.add("errore");
+      newPassword.nextElementSibling.textContent =
+        "Password min 6 caratteri, con almeno 1 maiuscola e 1 numero";
+      errore = true;
+    } else {
+      newPassword.classList.remove("errore");
+    }
+
+    if (errore) return; // se errore è diventata di valore true significa che qualche regex non è stata rispettata e allora si blocca la registrazione
+
+    document.getElementById("switch-registrazione").checked = false; // chiudi popup registrazione
   });
 
   // gestione bottone logout
@@ -300,7 +413,103 @@ document.addEventListener("DOMContentLoaded", function () {
     avatarMenu.classList.add("hidden");
   });
 });
+
 /* Gestione della simulazione log in*/
+
+/* Gestione Regex contatti */
+
+const contactForm = document.getElementById("contactForm");
+
+contactForm.addEventListener("submit", function (e) {
+  e.preventDefault(); // evita refresh pagina
+
+  const nome = document.getElementById("nome");
+  const cognome = document.getElementById("cognome");
+  const email = document.getElementById("email");
+  const telefono = document.getElementById("telefono");
+  const messaggio = document.getElementById("messaggio");
+  const privacy = document.getElementById("privacy");
+
+  // costanti regex
+  const nomeRegex = /^[a-zA-ZÀ-ž\s'-]{2,30}$/;
+  const cognomeRegex = /^[a-zA-ZÀ-ž\s'-]{2,30}$/;
+  const emailRegex = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+  const telefonoRegex = /^[0-9]{8,15}$/;
+  const messaggioRegex = /^.{10,}$/;
+
+  let errore = false;
+
+  // Reset messaggi precedenti
+  document.querySelectorAll("#contactForm .msg-errore").forEach(function (s) {
+    s.textContent = "";
+  });
+
+  // Nome
+  if (!nomeRegex.test(nome.value.trim())) {
+    nome.classList.add("errore");
+    nome.nextElementSibling.textContent =
+      "Inserisci un nome valido (solo lettere, min 2 caratteri)";
+    errore = true;
+  } else {
+    nome.classList.remove("errore");
+  }
+
+  // Cognome
+  if (!cognomeRegex.test(cognome.value.trim())) {
+    cognome.classList.add("errore");
+    cognome.nextElementSibling.textContent =
+      "Inserisci un cognome valido (solo lettere, min 2 caratteri)";
+    errore = true;
+  } else {
+    cognome.classList.remove("errore");
+  }
+
+  // Email
+  if (!emailRegex.test(email.value.trim())) {
+    email.classList.add("errore");
+    email.nextElementSibling.textContent = "Inserisci una email valida.";
+    errore = true;
+  } else {
+    email.classList.remove("errore");
+  }
+
+  if (
+    telefono.value.trim() !== "" &&
+    !telefonoRegex.test(telefono.value.trim())
+  ) {
+    //telefono.value.trim() !== "" significa che il controllo parte solo se è stato compilato il numero di telefono
+    telefono.classList.add("errore");
+    telefono.nextElementSibling.textContent =
+      "Inserisci un numero di telefono valido (8-15 cifre)";
+    errore = true;
+  } else {
+    telefono.classList.remove("errore");
+  }
+
+  // messaggio
+  if (!messaggioRegex.test(messaggio.value.trim())) {
+    messaggio.classList.add("errore");
+    messaggio.nextElementSibling.textContent =
+      "Il messaggio deve contenere almeno 10 caratteri";
+    errore = true;
+  } else {
+    messaggio.classList.remove("errore");
+  }
+
+  // privacy
+  if (!privacy.checked) {
+    privacy.classList.add("errore");
+    privacy.parentElement.nextElementSibling.textContent =
+      "Devi accettare l'informativa sulla privacy";
+    errore = true;
+  } else {
+    privacy.classList.remove("errore");
+  }
+
+  if (errore) return; //come le altre regex
+});
+
+/* Gestione Regex contatti */
 
 /* Gestione dei pulsanti della navbar */
 

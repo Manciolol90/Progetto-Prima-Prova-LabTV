@@ -275,11 +275,14 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // gestione bottone login
+
   loginForm.addEventListener("submit", function (e) {
     e.preventDefault(); // evita refresh pagina
 
     const username = document.getElementById("username");
     const password = document.getElementById("password");
+    let nomeAccount = username.value;
+    let pswAccount = password.value;
 
     // definizione delle regex
     const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
@@ -315,6 +318,14 @@ document.addEventListener("DOMContentLoaded", function () {
       password.classList.remove("errore");
     }
 
+    if (
+      nomeAccount != nomeAccount_registrazione ||
+      pswAccount != pswAccount_registrazione
+    ) {
+      errore = true;
+      alert("Username o Password errati");
+    }
+
     // se i dati inseriti non seguono le regex la funzione si interrompe
     if (errore) return;
 
@@ -322,6 +333,9 @@ document.addEventListener("DOMContentLoaded", function () {
     hiddenButtons.forEach(function (btn) {
       btn.classList.remove("hidden");
     });
+
+    username.value = "";
+    password.value = "";
 
     // Facendo login mostriamo gli slider "Per te" e "Continua a guardare" che simulano il fatto che l'utente ha una cronologia di visione
     document.getElementById("perte").classList.remove("hidden");
@@ -340,13 +354,19 @@ document.addEventListener("DOMContentLoaded", function () {
   //gestione del bottone registrati
 
   const registerForm = document.getElementById("registerForm");
-
+  let nomeAccount_registrazione;
+  let pswAccount_registrazione;
   registerForm.addEventListener("submit", function (e) {
     e.preventDefault(); // evita refresh pagina
 
     const newUsername = document.getElementById("new-username");
     const newEmail = document.getElementById("new-email");
     const newPassword = document.getElementById("new-password");
+
+    nomeAccount_registrazione = newUsername.value;
+    pswAccount_registrazione = newPassword.value;
+
+    console.log(nomeAccount_registrazione, pswAccount_registrazione);
 
     // definizione delle regex
     const usernameRegex = /^[a-zA-Z0-9_]{3,15}$/;
@@ -392,6 +412,9 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (errore) return; // se errore è diventata di valore true significa che qualche regex non è stata rispettata e allora si blocca la registrazione
 
+    newEmail.value = "";
+    newPassword.value = "";
+    newUsername.value = "";
     document.getElementById("switch-registrazione").checked = false; // chiudi popup registrazione
   });
 
@@ -419,6 +442,7 @@ document.addEventListener("DOMContentLoaded", function () {
 /* Gestione Regex contatti */
 
 const contactForm = document.getElementById("contactForm");
+const btnChiudi = document.getElementById("contatti");
 
 contactForm.addEventListener("submit", function (e) {
   e.preventDefault(); // evita refresh pagina
@@ -506,7 +530,14 @@ contactForm.addEventListener("submit", function (e) {
     privacy.classList.remove("errore");
   }
 
-  if (errore) return; //come le altre regex
+  if (errore) return;
+
+  nome.value = "";
+  cognome.value = "";
+  email.value = "";
+  messaggio.value = "";
+  telefono.value = "";
+  btnChiudi.checked = false; //per riazzerare i campi dopo aver inviato il messaggio. chiusura del popup
 });
 
 /* Gestione Regex contatti */
